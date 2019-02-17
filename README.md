@@ -14,15 +14,15 @@ To reproduce the live demo follow the instructions [here](./demo/demo.md)
 
 ## Open Service Broker API
 
-[https://openservicebrokerapi.org/](https://openservicebrokerapi.org/)
-[https://github.com/openservicebrokerapi/servicebroker](https://github.com/openservicebrokerapi/servicebroker)
-[OpenAPI sepcification](http://petstore.swagger.io/?url=https://raw.githubusercontent.com/openservicebrokerapi/servicebroker/master/openapi.yaml)
+- [https://openservicebrokerapi.org/](https://openservicebrokerapi.org/)
+- [https://github.com/openservicebrokerapi/servicebroker](https://github.com/openservicebrokerapi/servicebroker)
+- [OpenAPI sepcification](http://petstore.swagger.io/?url=https://raw.githubusercontent.com/openservicebrokerapi/servicebroker/master/openapi.yaml)
 
 ## Service Catalog
 
-[https://svc-cat.io](https://svc-cat.io)
-[https://kubernetes.io/docs/concepts/extend-kubernetes/service-catalog/](https://kubernetes.io/docs/concepts/extend-kubernetes/service-catalog/)
-[https://github.com/kubernetes-incubator/service-catalog](https://github.com/kubernetes-incubator/service-catalog)
+- [https://svc-cat.io](https://svc-cat.io)
+- [https://kubernetes.io/docs/concepts/extend-kubernetes/service-catalog/](https://kubernetes.io/docs/concepts/extend-kubernetes/service-catalog/)
+- [https://github.com/kubernetes-incubator/service-catalog](https://github.com/kubernetes-incubator/service-catalog)
 
 ## Service Brokers
 
