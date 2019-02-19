@@ -59,6 +59,33 @@ To install the GCP Service Broker use the Google service catalog installer tool.
 sc add-gcp-broker
 ```
 
+# Azure
+
+Login to Azure and get credentials for the SB
+
+```shell
+az login
+az account list -o table
+```
+
+Create a resource group to host you SB and its resources and a service principal:
+
+```
+az group create --name osba --location westeurope
+az ad sp create-for-rbac --name osba -o table
+```
+
+Install the Service Broker:
+
+```shell
+helm repo add azure https://kubernetescharts.blob.core.windows.net/azure
+helm install azure/open-service-broker-azure --name azure-sb --namespace azure-sb \
+  --set azure.subscriptionId=<AZURE_SUBSCRIPTION_ID> \
+  --set azure.tenantId=<AZURE_TENANT_ID> \
+  --set azure.clientId=<AZURE_CLIENT_ID> \
+  --set azure.clientSecret=<AZURE_CLIENT_SECRET>
+```
+
 ## AWS
 
 The AWS Service Broker uses CloudFormation stacks as basis for provisioning services. The default templates are in a public s3 bucket:
@@ -95,33 +122,6 @@ helm install aws-sb/aws-servicebroker \
 	--set aws.secretkey=<SECRET_KEY>
 ```
 
-# Azure
-
-Login to Azure and get credentials for the SB
-
-```shell
-az login
-az account list -o table
-```
-
-Create a resource group to host you SB and its resources and a service principal:
-
-```
-az group create --name osba --location westeurope
-az ad sp create-for-rbac --name osba -o table
-```
-
-Install the Service Broker:
-
-```shell
-helm repo add azure https://kubernetescharts.blob.core.windows.net/azure
-helm install azure/open-service-broker-azure --name azure-sb --namespace azure-sb \
-  --set azure.subscriptionId=<AZURE_SUBSCRIPTION_ID> \
-  --set azure.tenantId=<AZURE_TENANT_ID> \
-  --set azure.clientId=<AZURE_CLIENT_ID> \
-  --set azure.clientSecret=<AZURE_CLIENT_SECRET>
-```
-
 # Workloads
 
 TBD
@@ -131,4 +131,7 @@ TBD
 ```shell
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm install --name kubeapps --namespace kubeapps bitnami/kubeapps
+kubectl create serviceaccount kubeapps-operator
+kubectl create clusterrolebinding kubeapps-operator --clusterrole=cluster-admin --serviceaccount=default:kubeapps-operator
+kubectl get secret $(kubectl get serviceaccount kubeapps-operator -o jsonpath='{.secrets[].name}') -o jsonpath='{.data.token}' | base64 --decode
 ```
