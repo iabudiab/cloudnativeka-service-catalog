@@ -102,7 +102,8 @@ To install the AWS Service Broker:
 
 ```shell
 # DynamoDB Stack for persistence
-aws cloudformation create-stack --capabilities CAPABILITY_IAM --stack-name asb --template-body file://aws-prerequisites.yml
+curl -JL https://raw.githubusercontent.com/awslabs/aws-servicebroker/master/setup/prerequisites.yaml -o prerequisites.yml
+aws cloudformation create-stack --capabilities CAPABILITY_IAM --stack-name asb --template-body file://prerequisites.yml
 # Get the user for the Service Broker
 aws cloudformation describe-stacks --stack-name asb  | jq '.Stacks[] | select(.StackName == "asb") | .Outputs[] | select(.OutputKey == "IAMUser") | .OutputValue'
 # Create an access key for the user
@@ -124,13 +125,26 @@ helm install aws-sb/aws-servicebroker \
 
 # Workloads
 
-TBD
+## Ghost Blog
+
+```shell
+helm install --name ghost --namespace ghost azure/ghost \
+	--set persistence.enabled=false \
+	--set mysql.embeddedMaria=false \
+	--set mysql.azure.location=westeurope \
+	--set mysql.azure.servicePlan=basic
+```
+
+## Custom SB
+
+
 
 # Kubeapss
 
 ```shell
 helm repo add bitnami https://charts.bitnami.com/bitnami
-helm install --name kubeapps --namespace kubeapps bitnami/kubeapps
+helm install --name kubeapps --namespace kubeapps bitnami/kubeapps --set frontend.service.type=LoadBalancer
+
 kubectl create serviceaccount kubeapps-operator
 kubectl create clusterrolebinding kubeapps-operator --clusterrole=cluster-admin --serviceaccount=default:kubeapps-operator
 kubectl get secret $(kubectl get serviceaccount kubeapps-operator -o jsonpath='{.secrets[].name}') -o jsonpath='{.data.token}' | base64 --decode
