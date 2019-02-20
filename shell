@@ -1,0 +1,31 @@
+#!/bin/zsh
+
+# zsh & git
+sudo apt update && sudo apt install -qyy zsh git
+
+# shell
+git clone --recursive https://github.com/iabudiab/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"
+
+setopt EXTENDED_GLOB
+for rcfile in "${ZDOTDIR:-$HOME}"/.zprezto/runcoms/^README.md(.N); do
+  ln -s "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}"
+done
+
+# convenience
+curl -sOJL https://rawgit.com/ahmetb/kubectl-alias/master/.kubectl_aliases
+echo "[ -f ~/.kubectl_aliases ] && source ~/.kubectl_aliases" >> .zshrc
+
+git clone https://github.com/ahmetb/kubectx ~/.kubectx
+ln -s .kubectx/kubectx /usr/local/bin/kubectx
+ln -s .kubectx/kubens /usr/local/bin/kubens
+echo "alias kctx=kubectx" >> .zshrc
+echo "alias kns=kubens" >> .zshrc
+
+git clone https://github.com/jonmosco/kube-ps1.git ~/.kube-ps1
+chmod 700 ~/.kube-ps1/kube-ps1.sh
+echo "[ -f ~/.kube-ps1/kube-ps1.sh ] && source ~/.kube-ps1/kube-ps1.sh" >> .zshrc
+echo "PROMPT='\$(kube_ps1)'\$PROMPT" >> .zshrc
+echo "alias kon=kubeon" >> .zshrc
+echo "alias koff=kubeoff" >> .zshrc
+
+echo "export PATH=~/.kube-ps1:~/.kubectx:\$PATH" >> .zshrc

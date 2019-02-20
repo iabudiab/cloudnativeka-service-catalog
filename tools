@@ -1,0 +1,54 @@
+#!/bin/zsh
+
+mkdir -p .local/lib/{aws,sc,svcat}/bin
+
+# kubectl
+sudo apt-get update && sudo apt-get install -y apt-transport-https
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
+sudo apt-get update
+sudo apt-get install -y kubectl
+export "source <(kubectl completion zsh)" >> .zshrc
+
+# helm
+curl https://raw.githubusercontent.com/helm/helm/master/scripts/get > get_helm.sh
+chmod 700 get_helm.sh
+./get_helm.sh
+rm get_helm.sh
+
+# gcloud
+export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)"
+echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+sudo apt-get update && sudo apt-get install google-cloud-sdk
+
+# gcp sc
+curl -sLO https://github.com/GoogleCloudPlatform/k8s-service-catalog/releases/download/v1.0.0-beta.4/service-catalog-installer-v1.0.0-beta.4-linux.tgz
+tar -zxvf service-catalog-installer-v1.0.0-beta.4-linux.tgz -C ~/.local/lib/sc/bin
+rm service-catalog-installer-v1.0.0-beta.4-linux.tgz
+
+# aws cli
+sudo apt-get install python-setuptools
+sudo easy_install pip
+pip install awscli --user
+
+# svcat
+curl -sLO https://download.svcat.sh/cli/latest/linux/amd64/svcat
+chmod +x ./svcat
+mv ./svcat ~/.local/lib/svcat/bin/
+~/.local/lib/svcat/bin/svcat completion zsh > .svcat_completion
+echo "[ -f ~/.svcat_completion ] && source ~/.svcat_completion" >> .zshrc
+
+# jq
+curl -JLO https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
+chmod +x jq-linux64
+mv jq-linux64 ~/.local/bin/jq
+
+# doitlive
+pip install doitlive --user
+
+# mysql
+sudo apt-get install mysql-client
+
+# path
+echo "export PATH=~/.local/lib/aws/bin:~/.local/bin:~/.local/lib/svcat/bin:~/.local/lib/gcloud/bin:~/.local/lib/sc/bin:\$PATH" >> .zshrc
