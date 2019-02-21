@@ -47,21 +47,23 @@ aws s3 ls s3://awsservicebroker/templates/latest/
 curl -JLO https://raw.githubusercontent.com/awslabs/aws-servicebroker/master/setup/prerequisites.yaml
 aws cloudformation create-stack --capabilities CAPABILITY_IAM --stack-name aws-sb --template-body file://prerequisites.yml
 
-AWS_SB_USER=$(aws cloudformation describe-stacks --stack-name aws-sb  | jq '.Stacks[] | select(.StackName == "aws-sb") | .Outputs[] | select(.OutputKey == "IAMUser") | .OutputValue')
+AWS_SB_USER=$(aws cloudformation describe-stacks --stack-name aws-sb  | jq -r '.Stacks[] | select(.StackName == "aws-sb") | .Outputs[] | select(.OutputKey == "IAMUser") | .OutputValue')
 
-aws iam create-access-key --user-name "$AWS_SB_USER"
+AWS_SB_ACCESS_KEY=$(aws iam create-access-key --user-name "$AWS_SB_USER")
 
 helm repo add aws-sb https://awsservicebroker.s3.amazonaws.com/charts
 
 helm inspect aws-sb/aws-servicebroker --version 1.0.0-beta.3
 
+#doitlive env: AWS_SB_ACCESS_KEY=$(echo $AWS_SB_ACCESS_KEY | jq -r .AccessKey.AccessKeyId)
+#doitlive env: AWS_SB_SECRET_KEY=$(echo $AWS_SB_ACCESS_KEY | jq -r .AccessKey.SecretAccessKey)
 helm install aws-sb/aws-servicebroker \
 	--name aws-sb \
 	--namespace aws-sb \
 	--version 1.0.0-beta.3 \
 	--set aws.region=eu-central-1 \
-	--set aws.accesskeyid=$AWS_ACCESS_KEY \
-	--set aws.secretkey=$AWS_SECRET_KEY
+	--set aws.accesskeyid=$AWS_SB_ACCESS_KEY \
+	--set aws.secretkey=$AWS_SB_SECRET_KEY
 
 # Kubeapps
 
