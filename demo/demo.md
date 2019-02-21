@@ -51,6 +51,8 @@ brew install kubernetes-service-catalog-client
 
 This bug: [Cannot delete ClusterServiceBroker/ServiceBroker when wrong auth is specified](https://github.com/kubernetes-incubator/service-catalog/issues/2492) is particularly annoying
 
+And this one too: [Enhance `svcat provision` to support namespace scoped resources](https://github.com/kubernetes-incubator/service-catalog/issues/2371)
+
 ## GCP
 
 To install the GCP Service Broker use the Google service catalog installer tool. The GCP Service Catalog must be installed beforehand
@@ -105,7 +107,7 @@ To install the AWS Service Broker:
 curl -JL https://raw.githubusercontent.com/awslabs/aws-servicebroker/master/setup/prerequisites.yaml -o prerequisites.yml
 aws cloudformation create-stack --capabilities CAPABILITY_IAM --stack-name asb --template-body file://prerequisites.yml
 # Get the user for the Service Broker
-aws cloudformation describe-stacks --stack-name asb  | jq '.Stacks[] | select(.StackName == "asb") | .Outputs[] | select(.OutputKey == "IAMUser") | .OutputValue'
+aws cloudformation describe-stacks --stack-name asb  | jq -r '.Stacks[] | select(.StackName == "asb") | .Outputs[] | select(.OutputKey == "IAMUser") | .OutputValue'
 # Create an access key for the user
 aws iam create-access-key --user-name <AWS_SB_USER>
 ```
