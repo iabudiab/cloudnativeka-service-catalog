@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cnka-sample-service-broker
+  labels:
+    app: cnka-sample-service-broker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cnka-sample-service-broker
+  template:
+    metadata:
+      labels:
+        app: cnka-sample-service-broker
+    spec:
+      containers:
+      - name: cnka-sample-service-broker
+        image: iabudiab/cnka-sample-service-broker:latest
+        ports:
+        - containerPort: 8080
