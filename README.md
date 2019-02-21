@@ -4,7 +4,7 @@ This repository contains the sources and samples for my talk at the CloudNativeK
 
 ## Slides
 
-TBD
+https://docs.google.com/presentation/d/11PN83rpZVmhnopduWUTvKumhdJcRDJ4V26CMELIlS8M/edit?usp=sharing
 
 ## Demo
 
@@ -36,3 +36,4 @@ To reproduce the live demo follow the instructions [here](./demo/demo.md)
 
 - Kubeapps: [https://kubeapps.com](https://kubeapps.com)
 - Appscode KubeDB: [https://github.com/appscode/service-broker](https://github.com/appscode/service-broker)
+
