@@ -2,8 +2,6 @@
 
 This repository contains the sources and samples for my talk at the CloudNativeKa Meetup held on the 21.02.2019.
 
-# Asciinema recording of the whole demo will be available this weekend 24.02.2019
-
 ## Slides
 
 https://docs.google.com/presentation/d/11PN83rpZVmhnopduWUTvKumhdJcRDJ4V26CMELIlS8M/edit?usp=sharing
@@ -11,6 +9,11 @@ https://docs.google.com/presentation/d/11PN83rpZVmhnopduWUTvKumhdJcRDJ4V26CMELIl
 ## Demo
 
 To reproduce the live demo follow the instructions [here](./demo/demo.md)
+
+
+### Asciinema
+
+[![asciicast](https://asciinema.org/a/229567.svg)](https://asciinema.org/a/229567)
 
 # Resources
 
