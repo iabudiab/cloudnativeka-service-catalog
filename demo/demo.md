@@ -1,9 +1,12 @@
 # Install the Service Catalog
 
-For convenience, we'll configure Tiller to have cluster-admin access. If using default service account:
+For convenience, we'll configure Tiller and the sample broker to have cluster-admin access.
+
+If using default service account:
 
 ```shell
 kubectl create clusterrolebinding tiller-cluster-admin --clusterrole=cluster-admin --serviceaccount=kube-system:default
+kubectl create clusterrolebinding broker-cluster-admin --clusterrole=cluster-admin --serviceaccount=default:default
 ```
 
 Install the service catalog:
@@ -139,7 +142,39 @@ helm install --name ghost --namespace ghost azure/ghost \
 
 ## Custom SB
 
+To install the sample broker, clone the repository and deploy the `deployment.yaml` and `service.yaml` in the `demo` directory:
 
+
+```shell
+kubectl apply -f demo/deployment.yaml
+kubectl apply -f demo/service.yaml
+```
+
+Now you can register the broker with `svcat`
+
+```shell
+svcat register cnka --url <broker service ip> --scope cluster
+```
+
+The sample broker provides one service, the `image-tagging` service. It has only one endpoint that accepts a JSON payload with a base64-encoded image in it. The service sends the image to AWS Rekognition for label detection. If any of the labels having a confidence >90% matches the configure service filter, then the image is archived into a S3 bucket.
+
+To provision such a service via svcat 
+
+```shell
+svcat provision test-service --class image-tagging --plan free -p filter=cat
+```
+
+Sample payloads are also in the `demo` directory. When the service is up just POST with e.g. curl
+
+```shell
+curl -X POST -d @cat.base64 -H 'Content-Type: application/json' http://<service ip>/upload
+```
+
+sample output:
+
+```json
+[{"name":"Mammal","confidence":99.9312},{"name":"Canine","confidence":99.9312},{"name":"Pet","confidence":99.9312},{"name":"Golden Retriever","confidence":99.9312},{"name":"Dog","confidence":99.9312},{"name":"Animal","confidence":99.9312},{"name":"Puppy","confidence":88.90184}]
+```
 
 # Kubeapss
 
